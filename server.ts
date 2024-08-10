@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 
 const allowedOrigins = [
   'http://localhost:3000', // Local development
-  'https://event-planner-6yzf-4sgvp4qrn-iwantbasics-projects.vercel.app' // Vercel deployment
+  'https://event-planner-zca7.vercel.app' // Vercel deployment
 ];
 
 app.use(cors({
