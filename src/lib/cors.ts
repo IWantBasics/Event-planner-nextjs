@@ -5,9 +5,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 const cors = Cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     origin: [
+      'https://event-planner-nextjs-xi.vercel.app/',
       'https://event-planner-nextjs-xi.vercel.app',
       'https://event-planner-nextjs-git-main-iwantbasics-projects.vercel.app',
-      'https://event-planner-nextjs-d1souicsb-iwantbasics-projects.vercel.app'
+      'https://event-planner-nextjs-d1souicsb-iwantbasics-projects.vercel.app',
+      'https://event-planner-nextjs-97z1bxo6t-iwantbasics-projects.vercel.app/',
     ], // List all domains here
   });
 // Define the type for the middleware function
