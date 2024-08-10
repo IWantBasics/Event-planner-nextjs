@@ -1,11 +1,11 @@
-
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ImEllo } from 'react-icons/im';
-import { RiMapPinUserLine } from "react-icons/ri";
-import { FiUsers } from "react-icons/fi";
+import { RiMapPinUserLine } from 'react-icons/ri';
+import { FiUsers } from 'react-icons/fi';
 import Link from 'next/link';
+
 interface Event {
   id: number;
   name: string;
@@ -20,10 +20,12 @@ const Hero: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/events/upcoming');
+        const response = await axios.get(`${apiUrl}/api/events/upcoming`);
         setEvents(response.data);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -32,7 +34,7 @@ const Hero: React.FC = () => {
     };
 
     fetchEvents();
-  }, []);
+  }, [apiUrl]);
 
   const slidingEvents = [...events, ...events];
 
@@ -50,8 +52,8 @@ const Hero: React.FC = () => {
         celebrating today!
       </p>
       <button className="border border-blue-500 rounded-full p-4 px-8 text-white bg-blue-500 font-medium mx-auto flex items-center space-x-2 animate-slidein select-none">
-      <Link href="/signup">
-        <span className="text-2xl">Get Started</span>
+        <Link href="/signup">
+          <span className="text-2xl">Get Started</span>
         </Link>
         <ImEllo className="text-2xl" />
       </button>
@@ -63,21 +65,21 @@ const Hero: React.FC = () => {
             <p className="text-red-500">{error}</p>
           ) : (
             slidingEvents.map((event, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="bg-blue-100 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-                style={{ minWidth: '300px', height: '350px' }}  
+                style={{ minWidth: '300px', height: '350px' }}
               >
                 <div className="relative h-48 bg-blue-200 flex items-center justify-center">
                   <ImEllo className="text-6xl text-blue-500" />
-                  <div 
+                  <div
                     className="absolute top-2 left-2 bg-blue-500 text-white p-2 rounded-full text-sm"
                     style={{ maxWidth: '130px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                     title={event.created_by}
                   >
                     Created by: {event.created_by}
                   </div>
-                  <div 
+                  <div
                     className="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded-full flex items-center"
                     style={{ maxWidth: '130px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                     title={event.location}
@@ -90,20 +92,20 @@ const Hero: React.FC = () => {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 
+                  <h3
                     className="text-xl font-semibold mb-2 text-blue-600 text-center"
-                    title={event.name.length > 15 ? event.name : ""}
+                    title={event.name.length > 15 ? event.name : ''}
                   >
-                    Event: {event.name.length > 15 ? event.name.substring(0, 15) + "..." : event.name}
+                    Event: {event.name.length > 15 ? event.name.substring(0, 15) + '...' : event.name}
                     {event.name.length > 15 && (
                       <span className="tooltip">{event.name}</span>
                     )}
                   </h3>
-                  <div 
+                  <div
                     className="text-gray-600 text-sm truncate-text"
-                    title={event.description.length > 50 ? event.description : ""}
+                    title={event.description.length > 50 ? event.description : ''}
                   >
-                    Description: {event.description.length > 50 ? event.description.substring(0, 50) + "..." : event.description}
+                    Description: {event.description.length > 50 ? event.description.substring(0, 50) + '...' : event.description}
                     {event.description.length > 50 && (
                       <span className="tooltip">{event.description}</span>
                     )}
