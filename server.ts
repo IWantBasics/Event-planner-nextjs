@@ -11,9 +11,19 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// cors allow credentials 
+const allowedOrigins = [
+  'http://localhost:3000', // Local development
+  'https://event-planner-6yzf-4sgvp4qrn-iwantbasics-projects.vercel.app' // Vercel deployment
+];
+
 app.use(cors({
-  origin: 'http://localhost:3002', // Frontend URL
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 
