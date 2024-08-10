@@ -2,32 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.Toastify__toast--success.toast-success {
+  background-color: #4cc250;
+  color:white;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.overflow-hidden {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.flex {
+  display: flex;
+  white-space: nowrap;
+}
+
+/* Tooltip styling */
+.tooltip {
+  background-color: #1e40af !important; 
+  color: #ffffff !important; 
+  padding: 5px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 0.875rem;
+  z-index: 1000;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.truncate-text:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Add other utility classes if not already included */
+.Toastify__toast--success.toast-success {
+  background-color: #4cc250;
+  color:white;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
   }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.overflow-hidden {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 550px;
+}
+
+.flex {
+  display: flex;
+  white-space: nowrap;
+}
+
+.animate-slide {
+  display: flex;
+  animation: slide 60s linear infinite;
+  min-width: 100%; 
+}
+
+.animate-slide > div {
+  margin-right:40px;
+  flex: 0 0 20%; 
+}
+
+.truncate {
+  display: inline-block;
+  max-width: 120px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.truncate:hover {
+  position: relative;
+}
+
+.truncate:hover::after {
+  content: attr(data-fulltext);
+  position: absolute;
+  background: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  top: 100%;
+  left: 0;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.truncate-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
+  cursor: pointer;
+  position: relative;
+}
+.bg-blue-100 {
+  transition: transform 0.3s ease-in-out;
+  margin-top: 10px; 
 }
