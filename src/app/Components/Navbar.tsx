@@ -1,5 +1,4 @@
 import React from 'react'
-import { RiMapPinUserLine } from "react-icons/ri";
 import { ImEllo } from "react-icons/im";
 import Link from 'next/link'
 const Navbar = () => {
