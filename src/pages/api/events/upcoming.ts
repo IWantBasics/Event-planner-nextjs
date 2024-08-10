@@ -1,7 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { pool } from '../../../lib/db';
+import cors, { runMiddleware } from '../../../lib/cors';
 
 export default async function upcomingEventsHandler(req: NextApiRequest, res: NextApiResponse) {
+  // Run CORS middleware
+  await runMiddleware(req, res, cors);
+
   if (req.method === 'GET') {
     try {
       const query = `
@@ -21,6 +25,7 @@ export default async function upcomingEventsHandler(req: NextApiRequest, res: Ne
 
       res.json(result.rows);
     } catch (error) {
+      console.error(error); // Log the error for debugging purposes
       res.status(500).json({ message: 'Internal server error' });
     }
   } else {
