@@ -3,20 +3,14 @@ import { pool } from '../../../lib/db';
 import { cors, runMiddleware } from '../../../lib/cors';
 
 export default async function upcomingEventsHandler(req: NextApiRequest, res: NextApiResponse) {
-  // Log incoming request details
   console.log(`[INFO] Incoming request: ${req.method} ${req.url}`);
   console.log(`[INFO] Request headers: ${JSON.stringify(req.headers)}`);
 
-  // Run CORS middleware
   try {
     await runMiddleware(req, res, cors);
     console.log(`[INFO] CORS middleware executed successfully.`);
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(`[ERROR] CORS middleware failed: ${error.message}`);
-    } else {
-      console.error(`[ERROR] CORS middleware failed with an unknown error.`);
-    }
+    console.error(`[ERROR] CORS middleware failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     res.status(500).json({ message: 'CORS middleware error' });
     return;
   }
@@ -44,11 +38,7 @@ export default async function upcomingEventsHandler(req: NextApiRequest, res: Ne
 
       res.json(result.rows);
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(`[ERROR] Query execution failed: ${error.message}`);
-      } else {
-        console.error(`[ERROR] Query execution failed with an unknown error.`);
-      }
+      console.error(`[ERROR] Query execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       res.status(500).json({ message: 'Internal server error' });
     }
   } else {
