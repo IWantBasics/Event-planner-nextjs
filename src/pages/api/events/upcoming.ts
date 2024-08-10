@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pool } from '../../../lib/db';
-import cors, { runMiddleware } from '../../../lib/cors';
+import { cors, runMiddleware } from '../../../lib/cors'; // Named imports
 
 export default async function upcomingEventsHandler(req: NextApiRequest, res: NextApiResponse) {
   // Run CORS middleware
