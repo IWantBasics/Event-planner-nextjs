@@ -1,8 +1,33 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pool } from '../../../lib/db';
-import { cors, runMiddleware } from '../../../lib/cors';
+import Cors from 'cors';
 
-export default async function upcomingEventsHandler(req: NextApiRequest, res: NextApiResponse) {
+// Initialize CORS middleware
+const cors = Cors({
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  origin: [
+    'https://event-planner-nextjs-xi.vercel.app',
+    'https://event-planner-nextjs-git-main-iwantbasics-projects.vercel.app',
+    'https://event-planner-nextjs-d1souicsb-iwantbasics-projects.vercel.app',
+    'https://event-planner-nextjs-97z1bxo6t-iwantbasics-projects.vercel.app',
+  ],
+  credentials: true,
+});
+
+// Helper function to run middleware
+const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: Function): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result: any) => {
+      if (result instanceof Error) {
+        console.error(`[ERROR] Middleware error: ${result.message}`);
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log(`[INFO] Incoming request: ${req.method} ${req.url}`);
   console.log(`[INFO] Request headers: ${JSON.stringify(req.headers)}`);
 
