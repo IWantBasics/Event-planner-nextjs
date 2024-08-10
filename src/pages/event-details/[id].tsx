@@ -5,7 +5,7 @@ import { ImEllo } from 'react-icons/im';
 import { RiMapPinUserLine } from 'react-icons/ri';
 import { FiSend } from 'react-icons/fi';
 import { BiDoorOpen } from 'react-icons/bi';
-import { Event } from './../../../src/interfaces';
+import { Event } from '../../interfaces';
 
 interface User {
   id: number;
@@ -31,18 +31,25 @@ const EventDetails: React.FC = () => {
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      console.log('Stored user retrieved:', parsedUser);
-    }
+    const fetchUser = async () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        console.log('Stored user retrieved:', parsedUser);
+      }
+    };
 
-    if (id) {
-      fetchEventDetails();
-      fetchMessages(); // Fetch existing messages
-    }
-  }, [id]);
+    const fetchData = async () => {
+      if (id) {
+        await fetchEventDetails();
+        await fetchMessages(); // Fetch existing messages
+      }
+    };
+
+    fetchUser();
+    fetchData();
+  }, [id]); // Dependency array includes id
 
   const fetchEventDetails = async () => {
     try {
