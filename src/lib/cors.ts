@@ -1,18 +1,21 @@
 import Cors from 'cors';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+// Initialize the CORS middleware
+const cors = Cors({
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    origin: [
+      'https://event-planner-nextjs-xi.vercel.app',
+      'https://event-planner-nextjs-git-main-iwantbasics-projects.vercel.app',
+      'https://event-planner-nextjs-d1souicsb-iwantbasics-projects.vercel.app'
+    ], // List all domains here
+  });
 // Define the type for the middleware function
 type MiddlewareFunction = (
   req: NextApiRequest,
   res: NextApiResponse,
   next: (result?: any) => void
 ) => void;
-
-// Initialize the CORS middleware
-const cors = Cors({
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  origin: 'https://event-planner-nextjs-xi.vercel.app', // Allow your Vercel domain
-});
 
 // Helper function to run middleware
 function runMiddleware(

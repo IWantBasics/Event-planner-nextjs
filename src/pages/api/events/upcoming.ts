@@ -1,10 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pool } from '../../../lib/db';
-import { cors, runMiddleware } from '../../../lib/cors'; // Named imports
+import { cors, runMiddleware } from '../../../lib/cors';
 
 export default async function upcomingEventsHandler(req: NextApiRequest, res: NextApiResponse) {
   // Run CORS middleware
   await runMiddleware(req, res, cors);
+
+  // Check for authentication (example code, adjust as needed)
+  const authHeader = req.headers.authorization;
+  if (!authHeader || authHeader !== 'Bearer your-token-here') {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
   if (req.method === 'GET') {
     try {
