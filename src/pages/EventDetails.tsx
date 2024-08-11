@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-
+import Loading from '../app/Components/Loading';
 interface EventDetailsProps {
   id: number;
   name: string;
@@ -27,6 +27,7 @@ const EventDetailsPage: React.FC = () => {
   const fetchEventDetails = async () => {
     try {
       const response = await axios.get(`/api/events/${id}`);
+      console.log('Fetched event details:', response.data); // Debugging log
       setEvent(response.data);
     } catch (error) {
       console.error('Error fetching event details:', error);
@@ -35,7 +36,7 @@ const EventDetailsPage: React.FC = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading/>;
   if (!event) return <div>No event found</div>;
 
   return (

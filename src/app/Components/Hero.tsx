@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ImEllo } from 'react-icons/im';
@@ -20,33 +20,35 @@ const Hero: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Use environment variable for the API URL, fallback to localhost during development
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/events/upcoming`);
+        console.log('Fetched events in Hero component:', response.data);
         setEvents(response.data);
       } catch (error) {
-        console.error('Error fetching events:', error);
-        setError('An unexpected error occurred');
+        console.error('Detailed error fetching events:', error);
+        if (axios.isAxiosError(error)) {
+          setError(`Error: ${error.response?.data?.message || error.message}`);
+        } else {
+          setError('An unexpected error occurred');
+        }
       }
     };
-
+    
     fetchEvents();
   }, [apiUrl]);
 
-  const slidingEvents = [...events, ...events];
-
   return (
     <section className="text-center py-12 mx-auto container">
-      <h1 className="text-7xl font-bold mb-6 space-x-5">
-        <span className="text-blue-400 animate-slidein2">Connect</span>
-        <span className="text-yellow-300 animate-slidein3">Plan</span>
-        <span className="text-green-400 animate-slidein4">Celebrate</span>
+      <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 space-x-5 leading-tight">
+        <span className="text-blue-400 block md:inline animate-slidein2">Connect</span>
+        <span className="text-yellow-300 block md:inline animate-slidein3">Plan</span>
+        <span className="text-green-400 block md:inline animate-slidein4">Celebrate</span>
       </h1>
-      <p className="text-center max-w-5xl mx-auto text-xl mb-12 animate-slidein">
+      <p className="text-center max-w-5xl mx-auto text-lg md:text-xl lg:text-2xl mb-12 animate-slidein">
         Your one-stop platform for creating, discovering, and joining events.
         From intimate gatherings to big celebrations, EventConnect makes
         planning and attending social events effortless. Start connecting and
@@ -54,9 +56,9 @@ const Hero: React.FC = () => {
       </p>
       <button className="border border-blue-500 rounded-full p-4 px-8 text-white bg-blue-500 font-medium mx-auto flex items-center space-x-2 animate-slidein select-none">
         <Link href="/signup">
-          <span className="text-2xl">Get Started</span>
+          <span className="text-lg md:text-2xl">Get Started</span>
         </Link>
-        <ImEllo className="text-2xl" />
+        <ImEllo className="text-xl md:text-2xl" />
       </button>
       <div className="my-12"></div>
       <h2 className="text-3xl font-bold mb-8 text-blue-400">Upcoming Events</h2>
@@ -65,7 +67,7 @@ const Hero: React.FC = () => {
           {error ? (
             <p className="text-red-500">{error}</p>
           ) : (
-            slidingEvents.map((event, index) => (
+            events.map((event, index) => (
               <div
                 key={index}
                 className="bg-blue-100 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"

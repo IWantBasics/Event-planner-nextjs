@@ -63,7 +63,7 @@ const Signup = () => {
 
     if (validateForm()) {
       try {
-        const response = await axios.post('http://localhost:3000/api/signup', signupState, {
+        const response = await axios.post('http://localhost:3000/api/auth/signup', signupState, {
           headers: {
             'Content-Type': 'application/json',
           },

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import DashboardNavbar from '../app/Components/DashboardNavbar';
 import EventList from '../app/Components/EventList';
 import { Event } from './../../src/interfaces';
+import Loading from '@/app/Components/Loading';
 
 interface User {
   id: number;
@@ -90,27 +91,37 @@ const Dashboard: React.FC = () => {
   };
 
   const handleJoinEvent = async (id: number) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('No token found');
-      const response = await axios.post(`http://localhost:3000/api/events/join/${id}`, {}, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        withCredentials: true,
-      });
-      toast.success("Successfully joined the event!");
-      fetchData(); 
-    } catch (error) {
-      console.error('Error joining event:', error);
-      if (axios.isAxiosError(error)) {
-        const errorMessage = error.response?.data?.message || 'An unknown error occurred';
-        toast.error(`Failed to join event: ${errorMessage}`);
-      } else {
-        toast.error("Failed to join event. Please try again later.");
-      }
-    }
-  };
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token found');
+    const response = await axios.post(`http://localhost:3000/api/events/join/${id}`, {}, {
+      headers: { 'Authorization': `Bearer ${token}` },
+      withCredentials: true,
+    });
+    toast.success("Successfully joined the event!");
 
-  if (loading) return <div>Loading...</div>;
+    // Update the local state to reflect the new attendee count without re-sorting the list
+    setOtherEvents(prevEvents =>
+      prevEvents.map(event =>
+        event.id === id 
+          ? { ...event, attendee_count: (Number(event.attendee_count) || 0) + 1 } 
+          : event
+      )
+    );
+
+  } catch (error) {
+    console.error('Error joining event:', error);
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message || 'An unknown error occurred';
+      toast.error(`Failed to join event: ${errorMessage}`);
+    } else {
+      toast.error("Failed to join event. Please try again later.");
+    }
+  }
+};
+
+
+  if (loading) return <Loading/>;
 
   return (
     <>
@@ -130,26 +141,42 @@ const Dashboard: React.FC = () => {
           <ImEllo className="text-xl"/>
         </button>
 
-        <div className="mb-12 cw-">
+        <div className="mb-12">
           <h2 className="text-3xl font-bold mb-8 text-blue-400">Upcoming Events</h2>
-          <EventList 
-            events={otherEvents} 
-            onDelete={handleDeleteEvent} 
-            onEdit={handleEditEvent}
-            onJoin={handleJoinEvent}
-            isOwnEventList={false} 
-          />
+          <div className="overflow-x-auto">
+            <div className="flex space-x-4" style={{ whiteSpace: 'nowrap' }}>
+              {otherEvents.map((event, index) => (
+                <div key={index} className="inline-block">
+                  <EventList 
+                    events={[event]} 
+                    onDelete={handleDeleteEvent} 
+                    onEdit={handleEditEvent}
+                    onJoin={handleJoinEvent}
+                    isOwnEventList={false} 
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="mb-12">
           <h2 className="text-3xl font-bold mb-8 text-green-400">My Events</h2>
-          <EventList 
-            events={myEvents} 
-            onDelete={handleDeleteEvent} 
-            onEdit={handleEditEvent}
-            onJoin={handleJoinEvent}
-            isOwnEventList={true}  
-          />
+          <div className="overflow-x-auto">
+            <div className="flex space-x-4" style={{ whiteSpace: 'nowrap' }}>
+              {myEvents.map((event, index) => (
+                <div key={index} className="inline-block">
+                  <EventList 
+                    events={[event]} 
+                    onDelete={handleDeleteEvent} 
+                    onEdit={handleEditEvent}
+                    onJoin={handleJoinEvent}
+                    isOwnEventList={true}  
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>

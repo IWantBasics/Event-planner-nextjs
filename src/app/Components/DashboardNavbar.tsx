@@ -11,7 +11,7 @@ const DashboardNavbar: React.FC = () => {
   const handleLogout = async () => {
     console.log('Logout button clicked');
     try {
-      const response = await axios.post('http://localhost:3000/api/logout', {}, {
+      const response = await axios.post('http://localhost:3000/api/auth/logout', {}, {
         withCredentials: true
       });
       console.log('Logout response:', response);

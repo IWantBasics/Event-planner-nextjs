@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { Event } from '../../../src/interfaces';
 import { ImEllo } from 'react-icons/im';
@@ -17,6 +17,10 @@ interface EventListProps {
 
 const EventList: React.FC<EventListProps> = ({ events, onDelete, onEdit, onJoin, isOwnEventList, className }) => {
   const router = useRouter();
+
+  useEffect(() => {
+    console.log('Events fetched:', events); // Debugging log
+  }, [events]);
 
   const handleCardClick = (id: number) => {
     console.log(`Navigating to event details page for event ID: ${id}`);
@@ -77,7 +81,7 @@ const EventList: React.FC<EventListProps> = ({ events, onDelete, onEdit, onJoin,
                 <div className="flex items-center space-x-2">
                   <FiUsers className="text-green-500 animate-pulse" />
                   <span className="text-sm text-green-500">
-                    {event.attendee_count || 0} Attending
+                    {(event.attendee_count || 0).toString()} Attending
                   </span>
                 </div>
                 <div className="flex space-x-2">

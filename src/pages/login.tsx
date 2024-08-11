@@ -48,7 +48,7 @@ const Login = () => {
 
     if (validateForm()) {
       try {
-        const response = await axios.post('http://localhost:3000/api/login', loginState, {
+        const response = await axios.post('http://localhost:3000/api/auth/login', loginState, {
           headers: {
             'Content-Type': 'application/json',
           },

@@ -6,6 +6,7 @@ import { RiMapPinUserLine } from 'react-icons/ri';
 import { FiSend } from 'react-icons/fi';
 import { BiDoorOpen } from 'react-icons/bi';
 import { Event } from '../../interfaces';
+import Loading from '@/app/Components/Loading';
 
 interface User {
   id: number;
@@ -66,8 +67,8 @@ const EventDetails: React.FC = () => {
 
       const event = response.data as Event;
       event.attendees = event.attendees || [];
+      console.log('Event details fetched:', event); // Debugging log
       setEvent(event);
-      console.log('Event details fetched:', event);
     } catch (error) {
       console.error('Error fetching event details:', error);
     } finally {
@@ -171,7 +172,7 @@ const EventDetails: React.FC = () => {
     }
   };
 
-  if (loading || !event) return <div>Loading...</div>;
+  if (loading || !event) return <Loading/>;
 
   return (
     <div className="container mx-auto mt-10 p-5">
