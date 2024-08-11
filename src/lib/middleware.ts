@@ -5,6 +5,7 @@ import axios from 'axios';
 const cors = Cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   origin: 'https://event-planner-nextjs-xi.vercel.app',
+  
 });
 
 type MiddlewareFunction = (
