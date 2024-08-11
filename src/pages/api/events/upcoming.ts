@@ -2,26 +2,25 @@ import { NextApiResponse } from 'next';
 import { authenticateJWT, AuthenticatedRequest } from '../../../lib/auth';
 import { pool } from '../../../lib/db';
 
-export const authenticateJWT = (req: AuthenticatedRequest, res: NextApiResponse): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    const authHeader = req.headers.authorization;
-
-    if (authHeader) {
-      const token = authHeader.split(' ')[1];
-
-      jwt.verify(token, process.env.JWT_SECRET as string, (err: any, user: any) => {
-        if (err) {
-          res.status(403).json({ message: 'Invalid token' });
-          return reject(err);
-        }
-
-        req.user = user;
-        resolve();
-      });
+export default async function upcomingEventsHandler(req: AuthenticatedRequest, res: NextApiResponse, next: () => void) {
+  try {
+    await authenticateJWT(req, res, next);
+    if (req.method === 'GET') {
+      const result = await pool.query(`
+        SELECT e.*, u.fullname as created_by
+        FROM events e
+        LEFT JOIN users u ON e.user_id = u.id
+        WHERE e.date >= CURRENT_DATE
+        ORDER BY e.date ASC
+        LIMIT 10
+      `);
+      res.json(result.rows);
     } else {
-      res.status(401).json({ message: 'No token provided' });
-      reject(new Error('No token provided'));
+      res.setHeader('Allow', ['GET']);
+      res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-  });
-};
-
+  } catch (error) {
+    console.error('Error in upcomingEventsHandler:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
