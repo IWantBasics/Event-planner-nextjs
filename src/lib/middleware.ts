@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const cors = Cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  origin: 'https://event-planner-nextjs-xi.vercel.app', // Allow your Vercel domain
+  origin: 'https://event-planner-nextjs-xi.vercel.app',
 });
 
 type MiddlewareFunction = (
@@ -28,23 +28,21 @@ function runMiddleware(
   });
 }
 
-// Add axios interceptor
 axios.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
   }
   return config;
+}, error => {
+  return Promise.reject(error);
 });
 
 export const fetchUpcomingEvents = async () => {
-  const token = localStorage.getItem('token');
   try {
-    const response = await axios.get('/api/events/upcoming', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    const response = await axios.get('/api/events/upcoming');
     return response.data;
   } catch (error) {
     console.error('Error fetching upcoming events:', error);
