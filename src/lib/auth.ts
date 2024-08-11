@@ -6,18 +6,20 @@ export interface AuthenticatedRequest extends NextApiRequest {
 }
 
 export const authenticateJWT = (req: AuthenticatedRequest, res: NextApiResponse, next: () => void) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  const authHeader = req.headers.authorization;
 
-  if (token) {
-    jwt.verify(token, process.env.POSTGRES_JWT_SECRET as string, (err, user) => {
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(token, process.env.JWT_SECRET as string, (err: any, user: any) => {
       if (err) {
-        res.status(403).json({ message: 'Forbidden' });
-      } else {
-        req.user = user;
-        next();
+        return res.status(403).json({ message: 'Invalid token' });
       }
+
+      req.user = user;
+      next();
     });
   } else {
-    res.status(401).json({ message: 'Unauthorized' });
+    res.status(401).json({ message: 'No token provided' });
   }
 };

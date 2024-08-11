@@ -1,20 +1,18 @@
 import Cors from 'cors';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
+import axios from 'axios';
 
-// Define the type for the middleware function
-type MiddlewareFunction = (
-  req: NextApiRequest,
-  res: NextApiResponse,
-  next: (result?: any) => void
-) => void;
-
-// Initialize the CORS middleware
 const cors = Cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   origin: 'https://event-planner-nextjs-xi.vercel.app', // Allow your Vercel domain
 });
 
-// Helper function to run middleware
+type MiddlewareFunction = (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  next: (result: any) => void
+) => void;
+
 function runMiddleware(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -30,5 +28,13 @@ function runMiddleware(
   });
 }
 
-export { runMiddleware };
-export default cors;
+// Add axios interceptor
+axios.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export { cors, runMiddleware };
