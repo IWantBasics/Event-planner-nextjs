@@ -1,23 +1,24 @@
 import Cors from 'cors';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-// Initialize the CORS middleware
-const cors = Cors({
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    origin: [
-      'https://event-planner-nextjs-xi.vercel.app/',
-      'https://event-planner-nextjs-xi.vercel.app',
-      'https://event-planner-nextjs-git-main-iwantbasics-projects.vercel.app',
-      'https://event-planner-nextjs-d1souicsb-iwantbasics-projects.vercel.app',
-      'https://event-planner-nextjs-97z1bxo6t-iwantbasics-projects.vercel.app/',
-    ], // List all domains here
-  });
 // Define the type for the middleware function
 type MiddlewareFunction = (
   req: NextApiRequest,
   res: NextApiResponse,
   next: (result?: any) => void
 ) => void;
+
+// Initialize the CORS middleware
+const cors = Cors({
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  origin: [
+    'https://event-planner-nextjs-xi.vercel.app',
+    'https://event-planner-nextjs-git-main-iwantbasics-projects.vercel.app',
+    'https://event-planner-nextjs-d1souicsb-iwantbasics-projects.vercel.app',
+    'https://event-planner-nextjs-97z1bxo6t-iwantbasics-projects.vercel.app',
+  ],
+  credentials: true,
+});
 
 // Helper function to run middleware
 function runMiddleware(
@@ -28,6 +29,7 @@ function runMiddleware(
   return new Promise((resolve, reject) => {
     fn(req, res, (result: any) => {
       if (result instanceof Error) {
+        console.error(`[ERROR] Middleware error: ${result.message}`);
         return reject(result);
       }
       return resolve(result);
@@ -35,4 +37,5 @@ function runMiddleware(
   });
 }
 
-export { cors, runMiddleware };
+export { runMiddleware };
+export default cors;
