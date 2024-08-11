@@ -37,4 +37,19 @@ axios.interceptors.request.use(config => {
   return config;
 });
 
+export const fetchUpcomingEvents = async () => {
+  const token = localStorage.getItem('token');
+  try {
+    const response = await axios.get('/api/events/upcoming', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching upcoming events:', error);
+    throw error;
+  }
+};
+
 export { cors, runMiddleware };
