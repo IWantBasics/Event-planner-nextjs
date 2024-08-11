@@ -3,18 +3,20 @@ import { authenticateJWT, AuthenticatedRequest } from '../../../lib/auth';
 import { pool } from '../../../lib/db';
 
 export default async function eventDetailsHandler(req: AuthenticatedRequest, res: NextApiResponse) {
-  authenticateJWT(req, res, async () => {
+  try {
+    await authenticateJWT(req, res);
+    
     const { id } = req.query;
 
     if (req.method === 'GET') {
       try {
         const result = await pool.query(`
-          SELECT e.*, u.fullname as created_by, 
-            (SELECT json_agg(json_build_object('id', a.id, 'name', a.fullname))
-             FROM rsvps r
-             JOIN users a ON r.user_id = a.id
-             WHERE r.event_id = e.id AND r.status = 'attending'
-            ) as attendees
+          SELECT e.*, u.fullname as created_by,
+          (SELECT json_agg(json_build_object('id', a.id, 'name', a.fullname))
+          FROM rsvps r
+          JOIN users a ON r.user_id = a.id
+          WHERE r.event_id = e.id AND r.status = 'attending'
+          ) as attendees
           FROM events e
           LEFT JOIN users u ON e.user_id = u.id
           WHERE e.id = $1
@@ -59,5 +61,8 @@ export default async function eventDetailsHandler(req: AuthenticatedRequest, res
       res.setHeader('Allow', ['GET', 'DELETE', 'PUT']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-  });
+  } catch (error) {
+    console.error('Authentication error:', error);
+    res.status(401).json({ message: 'Authentication failed' });
+  }
 }
