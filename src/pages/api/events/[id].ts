@@ -10,13 +10,14 @@ export default async function eventDetailsHandler(req: AuthenticatedRequest, res
       try {
         const result = await pool.query(`
           SELECT e.*, u.fullname as created_by, 
-            json_agg(json_build_object('id', a.id, 'name', a.fullname)) FILTER (WHERE a.id IS NOT NULL) as attendees
+            (SELECT json_agg(json_build_object('id', a.id, 'name', a.fullname))
+             FROM rsvps r
+             JOIN users a ON r.user_id = a.id
+             WHERE r.event_id = e.id AND r.status = 'attending'
+            ) as attendees
           FROM events e
           LEFT JOIN users u ON e.user_id = u.id
-          LEFT JOIN rsvps r ON e.id = r.event_id AND r.status = 'attending'
-          LEFT JOIN users a ON r.user_id = a.id
           WHERE e.id = $1
-          GROUP BY e.id, u.fullname
         `, [id]);
 
         if (result.rows.length === 0) {
