@@ -9,8 +9,8 @@ export default async function eventDetailsHandler(req: AuthenticatedRequest, res
     if (req.method === 'GET') {
       try {
         const eventResult = await pool.query(
-          'SELECT events.*, users.fullname as created_by FROM events JOIN users ON events.user_id = users.id ORDER BY events.date OFFSET $1 LIMIT $2',
-          [offset, limit]
+          'SELECT e.*, u.fullname as created_by, COUNT(r.id) as attendee_count FROM events e LEFT JOIN users u ON e.user_id = u.id LEFT JOIN rsvps r ON e.id = r.event_id AND r.status = $3 WHERE e.id = $4 GROUP BY e.id, u.fullname',
+          ['attending', id]
         );
 
         if (eventResult.rows.length === 0) {
