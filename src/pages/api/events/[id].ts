@@ -4,13 +4,13 @@ import { pool } from '../../../lib/db';
 
 export default async function eventDetailsHandler(req: AuthenticatedRequest, res: NextApiResponse) {
   authenticateJWT(req, res, async () => {
-    const { id } = req.query;
+    const { id, offset = 0, limit = 20 } = req.query;
 
     if (req.method === 'GET') {
       try {
         const eventResult = await pool.query(
-          'SELECT events.*, users.fullname as created_by FROM events JOIN users ON events.user_id = users.id WHERE events.id = $1',
-          [id]
+          'SELECT events.*, users.fullname as created_by FROM events JOIN users ON events.user_id = users.id ORDER BY events.date OFFSET $1 LIMIT $2',
+          [offset, limit]
         );
 
         if (eventResult.rows.length === 0) {
