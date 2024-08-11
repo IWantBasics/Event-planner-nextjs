@@ -2,9 +2,9 @@ import { NextApiResponse } from 'next';
 import { authenticateJWT, AuthenticatedRequest } from '../../../lib/auth';
 import { pool } from '../../../lib/db';
 
-export default async function upcomingEventsHandler(req: AuthenticatedRequest, res: NextApiResponse, next: () => void) {
+export default async function upcomingEventsHandler(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
-    await authenticateJWT(req, res, next);
+    await authenticateJWT(req, res);
     if (req.method === 'GET') {
       const result = await pool.query(`
         SELECT e.*, u.fullname as created_by

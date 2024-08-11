@@ -29,14 +29,20 @@ function runMiddleware(
 }
 
 axios.interceptors.request.use(config => {
+  console.log('Axios interceptor: Preparing request');
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
+    console.log('Token from localStorage:', token);
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
+      console.log('Added Authorization header:', config.headers['Authorization']);
+    } else {
+      console.log('No token found in localStorage');
     }
   }
   return config;
 }, error => {
+  console.error('Axios interceptor error:', error);
   return Promise.reject(error);
 });
 
