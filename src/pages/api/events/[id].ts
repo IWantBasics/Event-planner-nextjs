@@ -1,34 +1,31 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiResponse } from 'next';
 import { authenticateJWT, AuthenticatedRequest } from '../../../lib/auth';
 import { pool } from '../../../lib/db';
 
 export default async function eventDetailsHandler(req: AuthenticatedRequest, res: NextApiResponse) {
   authenticateJWT(req, res, async () => {
-    const { id, offset = 0, limit = 20 } = req.query;
+    const { id } = req.query;
 
     if (req.method === 'GET') {
       try {
-        const eventResult = await pool.query(
-          'SELECT e.*, u.fullname as created_by, COUNT(r.id) as attendee_count FROM events e LEFT JOIN users u ON e.user_id = u.id LEFT JOIN rsvps r ON e.id = r.event_id AND r.status = $3 WHERE e.id = $4 GROUP BY e.id, u.fullname',
-          ['attending', id]
-        );
+        const result = await pool.query(`
+          SELECT e.*, u.fullname as created_by, 
+            json_agg(json_build_object('id', a.id, 'name', a.fullname)) FILTER (WHERE a.id IS NOT NULL) as attendees
+          FROM events e
+          LEFT JOIN users u ON e.user_id = u.id
+          LEFT JOIN rsvps r ON e.id = r.event_id AND r.status = 'attending'
+          LEFT JOIN users a ON r.user_id = a.id
+          WHERE e.id = $1
+          GROUP BY e.id, u.fullname
+        `, [id]);
 
-        if (eventResult.rows.length === 0) {
+        if (result.rows.length === 0) {
           return res.status(404).json({ message: 'Event not found' });
         }
 
-        const event = eventResult.rows[0];
-
-        // Get attendees
-        const attendeesResult = await pool.query(
-          'SELECT users.id, users.fullname as name FROM rsvps JOIN users ON rsvps.user_id = users.id WHERE rsvps.event_id = $1 AND rsvps.status = $2',
-          [id, 'attending']
-        );
-
-        event.attendees = attendeesResult.rows;
-
-        res.json(event);
+        res.json(result.rows[0]);
       } catch (error) {
+        console.error('Error fetching event:', error);
         res.status(500).json({ message: 'Internal server error' });
       }
     } else if (req.method === 'DELETE') {
@@ -39,6 +36,7 @@ export default async function eventDetailsHandler(req: AuthenticatedRequest, res
         }
         res.json({ message: 'Event deleted successfully' });
       } catch (error) {
+        console.error('Error deleting event:', error);
         res.status(500).json({ message: 'Internal server error' });
       }
     } else if (req.method === 'PUT') {
@@ -53,6 +51,7 @@ export default async function eventDetailsHandler(req: AuthenticatedRequest, res
         }
         res.json(result.rows[0]);
       } catch (error) {
+        console.error('Error updating event:', error);
         res.status(500).json({ message: 'Internal server error' });
       }
     } else {
