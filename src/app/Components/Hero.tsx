@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ImEllo } from 'react-icons/im';
@@ -19,6 +19,7 @@ interface Event {
 const Hero: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedDiv, setSelectedDiv] = useState<string | null>(null);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -26,10 +27,8 @@ const Hero: React.FC = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/events/upcoming`);
-        console.log('Fetched events in Hero component:', response.data);
         setEvents(response.data);
       } catch (error) {
-        console.error('Detailed error fetching events:', error);
         if (axios.isAxiosError(error)) {
           setError(`Error: ${error.response?.data?.message || error.message}`);
         } else {
@@ -37,80 +36,131 @@ const Hero: React.FC = () => {
         }
       }
     };
-    
+
     fetchEvents();
   }, [apiUrl]);
 
+  const handleTooltipToggle = (divName: string | null) => {
+    setSelectedDiv((prevSelected) => (prevSelected === divName ? null : divName));
+  };
+
+  const truncateText = (text: string, maxLength: number, isLargeScreen: boolean) => {
+   return isLargeScreen ? text : text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+
+  const formatDate = (date: string) => {
+    const dateObj = new Date(date);
+    return dateObj.toLocaleDateString();
+  };
+
   return (
-    <section className="text-center py-12 mx-auto container">
-      <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 space-x-5 leading-tight">
-        <span className="text-blue-400 block md:inline animate-slidein2">Connect</span>
-        <span className="text-yellow-300 block md:inline animate-slidein3">Plan</span>
+    <section className="text-center py-8 md:py-12 lg:py-9 mx-auto container px-4 md:px-8 lg:px-20 xl:px-32">
+      <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+        <span className="text-blue-400 block md:inline animate-slidein2 md:mr-2 lg:mr-4">Connect</span>
+        <span className="text-yellow-300 block md:inline animate-slidein3 md:mr-2 lg:mr-4">Plan</span>
         <span className="text-green-400 block md:inline animate-slidein4">Celebrate</span>
       </h1>
-      <p className="text-center max-w-5xl mx-auto text-lg md:text-xl lg:text-2xl mb-12 animate-slidein">
+      <p className="text-center max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto text-base md:text-lg lg:text-xl mb-8 md:mb-12 animate-slidein">
         Your one-stop platform for creating, discovering, and joining events.
         From intimate gatherings to big celebrations, EventConnect makes
         planning and attending social events effortless. Start connecting and
         celebrating today!
       </p>
-      <button className="border border-blue-500 rounded-full p-4 px-8 text-white bg-blue-500 font-medium mx-auto flex items-center space-x-2 animate-slidein select-none">
+      <div className="flex justify-center">
         <Link href="/signup">
-          <span className="text-lg md:text-2xl">Get Started</span>
+          <button className="border border-blue-500 rounded-full p-3 md:p-4 px-6 md:px-8 text-white bg-blue-500 font-medium flex items-center space-x-2 animate-slidein select-none">
+            <span className="text-lg md:text-2xl">Get Started</span>
+            <ImEllo className="text-xl md:text-2xl" />
+          </button>
         </Link>
-        <ImEllo className="text-xl md:text-2xl" />
-      </button>
-      <div className="my-12"></div>
-      <h2 className="text-3xl font-bold mb-8 text-blue-400">Upcoming Events</h2>
-      <div className="overflow-hidden mt-8">
-        <div className="flex animate-slide">
+      </div>
+      <div className="my-8 md:my-12 lg:my-16"></div>
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8 lg:mb-12 text-blue-400">Upcoming Events</h2>
+      <div className="overflow-hidden mt-4 md:mt-8 relative">
+        <div className="flex animate-slide whitespace-nowrap">
           {error ? (
             <p className="text-red-500">{error}</p>
           ) : (
             events.map((event, index) => (
               <div
                 key={index}
-                className="bg-blue-100 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
-                style={{ minWidth: '300px', height: '350px' }}
+                className="bg-blue-100 rounded-xl shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer relative z-20 mx-2 lg:mx-4"
+                style={{ minWidth: '300px', height: '350px', maxWidth: '300px' }}
               >
-                <div className="relative h-48 bg-blue-200 flex items-center justify-center">
-                  <ImEllo className="text-6xl text-blue-500" />
-                  <div
-                    className="absolute top-2 left-2 bg-blue-500 text-white p-2 rounded-full text-sm"
-                    style={{ maxWidth: '130px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    title={event.created_by}
-                  >
-                    Created by: {event.created_by}
+                <div className="relative bg-blue-200 rounded-xl p-4 flex flex-col justify-between" style={{ minHeight: '200px' }}>
+                  <div>
+                    <div className="flex justify-between items-center space-x-2 mb-4">
+                      <div
+                        className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm flex items-center justify-center max-h-10 w-auto max-w-[50%] relative group"
+                        onClick={() => handleTooltipToggle(`created_by-${index}`)}
+                      >
+                        <span className="truncate">
+                          {truncateText(event.created_by, 15, false)}
+                        </span>
+                        {selectedDiv === `created_by-${index}` && (
+                          <div className="absolute bg-blue-500 text-white px-2 py-1 rounded-full text-sm top-full left-1/2 transform -translate-x-1/2 mt-1 z-50">
+                            Created by: {event.created_by}
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm flex items-center justify-center max-h-10 w-auto max-w-[50%] relative group"
+                        onClick={() => handleTooltipToggle(`location-${index}`)}
+                      >
+                        <RiMapPinUserLine className="text-xl mr-1" />
+                        <span className="truncate">
+                          {truncateText(event.location, 15, false)}
+                        </span>
+                        {selectedDiv === `location-${index}` && (
+                          <div className="absolute bg-blue-500 text-white px-2 py-1 rounded-full text-sm top-full left-1/2 transform -translate-x-1/2 mt-1 z-50">
+                            Location: {event.location}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex justify-center mt-2">
+                      <ImEllo className="text-6xl text-blue-500" />
+                    </div>
                   </div>
                   <div
-                    className="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded-full flex items-center"
-                    style={{ maxWidth: '130px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    title={event.location}
-                  >
-                    <RiMapPinUserLine className="text-xl flex-shrink-0" />
-                    <span style={{ marginLeft: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.location}</span>
-                  </div>
-                  <div className="absolute bottom-2 left-2 bg-blue-500 text-white px-2 py-1 rounded-full text-sm">
-                    Starts at: {new Date(event.date).toLocaleDateString()}
-                  </div>
+  className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm self-start relative max-h-10 lg:w-auto lg:whitespace-nowrap cursor-pointer mt-4"
+  onClick={() => handleTooltipToggle(`starts_at-${index}`)}
+>
+  <span className="block truncate lg:inline lg:whitespace-nowrap">
+    Starts at: {truncateText(formatDate(event.date), 50, false)}
+  </span>
+  {selectedDiv === `starts_at-${index}` && (
+    <div className="absolute bg-blue-500 text-white px-2 py-2 rounded-full text-sm left-1/2 transform -translate-x-1/2 z-50" style={{ top: '120%' }}>
+      {formatDate(event.date)}
+    </div>
+  )}
+</div>
+
+
                 </div>
                 <div className="p-6">
                   <h3
-                    className="text-xl font-semibold mb-2 text-blue-600 text-center"
-                    title={event.name.length > 15 ? event.name : ''}
+                    className="text-xl font-semibold mb-2 text-blue-600 text-center relative cursor-pointer"
+                    onClick={() => handleTooltipToggle(`name-${index}`)}
                   >
-                    Event: {event.name.length > 15 ? event.name.substring(0, 15) + '...' : event.name}
-                    {event.name.length > 15 && (
-                      <span className="tooltip">{event.name}</span>
+                    {truncateText(event.name, 15, false)}
+                    {selectedDiv === `name-${index}` && (
+                      <div className="absolute bg-blue-500 text-white px-2 py-1 rounded-full text-sm top-full left-1/2 transform -translate-x-1/2 mt-1 z-50">
+                        {event.name}
+                      </div>
                     )}
                   </h3>
-                  <div
-                    className="text-gray-600 text-sm truncate-text"
-                    title={event.description.length > 50 ? event.description : ''}
-                  >
-                    Description: {event.description.length > 50 ? event.description.substring(0, 50) + '...' : event.description}
-                    {event.description.length > 50 && (
-                      <span className="tooltip">{event.description}</span>
+                  <div className="relative">
+                    <div
+                      className="text-gray-600 text-sm truncate-text cursor-pointer"
+                      onClick={() => handleTooltipToggle(`description-${index}`)}
+                    >
+                      {truncateText(event.description, 50, false)}
+                    </div>
+                    {selectedDiv === `description-${index}` && (
+                      <div className="absolute bg-blue-500 text-white px-3 py-2 rounded-lg text-sm top-full left-1/2 transform -translate-x-1/2 mt-1 z-50 w-64 max-w-sm whitespace-normal">
+                        {event.description}
+                      </div>
                     )}
                   </div>
                   <div className="flex justify-between items-center mt-4">

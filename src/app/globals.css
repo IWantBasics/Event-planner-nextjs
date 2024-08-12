@@ -80,7 +80,7 @@
 
 .animate-slide {
   display: flex;
-  animation: slide 60s linear infinite;
+  animation: slide 30s linear infinite;
   min-width: 100%; 
 }
 
@@ -133,4 +133,129 @@
 .custom-space-x {
   display: flex;
   gap: 7rem; 
+}
+
+/* Add this to your global CSS or directly within the component */
+.navbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+  .navbar-wrapper {
+    flex-direction: column;
+  }
+
+  .navbar-menu {
+    width: 100%;
+    margin-top: 10px;
+    justify-content: center;
+  }
+
+  .navbar-menu ul {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+}
+/* Mobile Navigation Adjustments */
+@media (max-width: 768px) {
+  .navbar-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+  }
+
+  .navbar-menu li {
+    margin-bottom: 1rem;
+  }
+
+  .navbar-menu .inline-block {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* General Button Styling */
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+
+/* Adjust button size and padding for mobile */
+.navbar-button {
+  font-size: 0.875rem; /* Smaller text size */
+  padding: 0.5rem 1rem; /* Adjust padding */
+  border-radius: 9999px; /* Full-rounded corners */
+}
+
+.navbar-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: white;
+  height: 100vh;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  transform: translateX(0%);  transition: transform 0.3s ease-in-out;
+}
+
+.navbar-menu li {
+  margin-bottom: 1rem;
+}
+
+.menu-icon {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+}
+
+@media (max-width: 768px) {
+  .navbar-menu {
+    align-items: center; /* Center items horizontally */
+  }
+
+  .navbar-button {
+    width: 80%; /* Make buttons wider */
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .menu-icon {
+    top: 1rem; /* Adjust the position */
+    right: 1rem;
+  }
+}
+
+/* Adjust other elements for better mobile appearance */
+h1, p {
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+p {
+  font-size: 1rem;
+}
+/* Add this to your global CSS or inline within the component */
+ul {
+  z-index: 50; /* Ensure it is on top of other elements */
+}
+
+ul.transition-transform {
+  transform-origin: top;
 }
