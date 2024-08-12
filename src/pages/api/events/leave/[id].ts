@@ -10,13 +10,11 @@ export default async function leaveEventHandler(req: AuthenticatedRequest, res: 
 
     if (req.method === 'POST') {
       try {
-        // Delete the RSVP record
         const result = await pool.query('DELETE FROM rsvps WHERE event_id = $1 AND user_id = $2 RETURNING *', [id, req.user.id]);
         if (result.rows.length === 0) {
           return res.status(404).json({ message: 'You have not joined this event or it does not exist' });
         }
 
-        // Decrement the attendee count in the events table
         await pool.query('UPDATE events SET attendee_count = attendee_count - 1 WHERE id = $1', [id]);
 
         res.status(200).json({ message: 'Left event successfully' });

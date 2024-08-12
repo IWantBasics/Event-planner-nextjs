@@ -10,16 +10,13 @@ export default async function joinEventHandler(req: AuthenticatedRequest, res: N
 
     if (req.method === 'POST') {
       try {
-        // Check if the user has already joined the event
         const existingRSVP = await pool.query('SELECT * FROM rsvps WHERE event_id = $1 AND user_id = $2', [id, req.user.id]);
         if (existingRSVP.rows.length > 0) {
           return res.status(400).json({ message: 'You have already joined this event' });
         }
 
-        // Insert a new RSVP record
         await pool.query('INSERT INTO rsvps (event_id, user_id, status) VALUES ($1, $2, $3)', [id, req.user.id, 'attending']);
         
-        // Increment the attendee count in the events table
         await pool.query('UPDATE events SET attendee_count = attendee_count + 1 WHERE id = $1', [id]);
 
         res.status(200).json({ message: 'Joined event successfully' });

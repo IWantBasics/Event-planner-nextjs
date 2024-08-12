@@ -4,10 +4,8 @@ import { pool } from '../../lib/db';
 
 export default async function userHandler(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
-    // Authenticate the request
     await authenticateJWT(req, res);
 
-    // Fetch the authenticated user's details
     const result = await pool.query(
       'SELECT id, fullname, email FROM users WHERE id = $1',
       [req.user.id]

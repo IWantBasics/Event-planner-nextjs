@@ -15,7 +15,7 @@ export const authenticateJWT = (req: AuthenticatedRequest, res: NextApiResponse)
       const token = authHeader.split(' ')[1];
       console.log('Extracted token:', token);
 
-      // Use the POSTGRES_JWT_SECRET environment variable
+
       const secret = process.env.POSTGRES_JWT_SECRET as string;
       if (!secret) {
         console.error('JWT secret not provided');

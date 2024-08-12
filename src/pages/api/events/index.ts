@@ -4,10 +4,8 @@ import { pool } from '../../../lib/db';
 
 export default async function eventsHandler(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
-    // Authenticate the request
     await authenticateJWT(req, res);
 
-    // Handle GET requests
     if (req.method === 'GET') {
       try {
         const result = await pool.query(
@@ -20,7 +18,6 @@ export default async function eventsHandler(req: AuthenticatedRequest, res: Next
         res.status(500).json({ message: 'Internal server error' });
       }
     } 
-    // Handle POST requests
     else if (req.method === 'POST') {
       try {
         const { name, date, description, location } = req.body;
@@ -39,7 +36,7 @@ export default async function eventsHandler(req: AuthenticatedRequest, res: Next
         res.status(500).json({ message: 'Internal server error' });
       }
     } 
-    // Handle other HTTP methods
+
     else {
       res.setHeader('Allow', ['GET', 'POST']);
       res.status(405).end(`Method ${req.method} Not Allowed`);

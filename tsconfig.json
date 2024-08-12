@@ -4,9 +4,9 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": false,  
+    "noEmit": true,
     "esModuleInterop": true,
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -21,10 +21,10 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": ".",
     "sourceMap": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist"
   },
   "include": [
     "next-env.d.ts",
@@ -35,7 +35,7 @@
     "src/**/*",
     "custom.d.ts"
   ],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
