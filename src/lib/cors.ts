@@ -13,6 +13,7 @@ export const cors = Cors({
     console.log(`[CORS] Incoming request from origin: ${origin}`);
     const allowedOrigins = [
       'https://event-planner-nextjs-xi.vercel.app',
+      'https://event-planner-nextjs-xi.vercel.app/',
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
