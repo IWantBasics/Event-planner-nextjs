@@ -63,7 +63,7 @@ const EventDetails: React.FC = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:3000/api/events/${id}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
@@ -82,7 +82,7 @@ const EventDetails: React.FC = () => {
   const fetchMessages = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:3000/api/events/${id}/messages`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}/messages`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
@@ -121,7 +121,7 @@ const EventDetails: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found');
-      await axios.post(`http://localhost:3000/api/events/leave/${id}`, {}, {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/events/leave/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
@@ -147,7 +147,7 @@ const EventDetails: React.FC = () => {
       try {
         const token = localStorage.getItem('token');
         await axios.post(
-          `http://localhost:3000/api/events/${id}/messages`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}/messages`,
           {
             userId: user.id,
             message,

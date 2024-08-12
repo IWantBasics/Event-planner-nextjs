@@ -22,7 +22,7 @@ const CreateEvent: React.FC = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token'); 
-      await axios.post('http://localhost:3000/api/events', eventData, {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/events`, eventData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

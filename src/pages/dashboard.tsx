@@ -38,20 +38,20 @@ const Dashboard: React.FC = () => {
         return;
       }
 
-      const userResponse = await axios.get('http://localhost:3000/api/user', {
+      const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`, {
         headers: { 'Authorization': `Bearer ${token}` },
         withCredentials: true,
       });
       setUser(userResponse.data);
       localStorage.setItem('user', JSON.stringify(userResponse.data));
 
-      const myEventsResponse = await axios.get('http://localhost:3000/api/events', {
+      const myEventsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/events`, {
         headers: { 'Authorization': `Bearer ${token}` },
         withCredentials: true,
       });
       setMyEvents(myEventsResponse.data);
 
-      const otherEventsResponse = await axios.get('http://localhost:3000/api/events/others', {
+      const otherEventsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/events/others`, {
         headers: { 'Authorization': `Bearer ${token}` },
         withCredentials: true,
       });
@@ -75,7 +75,7 @@ const Dashboard: React.FC = () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found');
-        await axios.delete(`http://localhost:3000/api/events/${id}`, {
+        await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`, {
           headers: { 'Authorization': `Bearer ${token}` },
           withCredentials: true,
         });
@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found');
-      const response = await axios.post(`http://localhost:3000/api/events/join/${id}`, {}, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/events/join/${id}`, {}, {
         headers: { 'Authorization': `Bearer ${token}` },
         withCredentials: true,
       });

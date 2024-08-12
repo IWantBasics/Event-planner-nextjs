@@ -18,7 +18,7 @@ const EditEvent: React.FC = () => {
     const fetchEvent = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:3000/api/events/${id}`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log('Fetched event for editing:', response.data);
@@ -42,7 +42,7 @@ const EditEvent: React.FC = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:3000/api/events/${id}`, eventData, {
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`, eventData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       router.push('/dashboard');
