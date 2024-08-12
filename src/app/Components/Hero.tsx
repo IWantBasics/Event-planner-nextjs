@@ -76,6 +76,7 @@ const Hero: React.FC = () => {
       </div>
       <div className="my-8 md:my-12 lg:my-16"></div>
       <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8 lg:mb-12 text-blue-400">Upcoming Events</h2>
+      <h3 className="text-2xl md:text-3xl lg:text-3xl font-bold mb-6 md:mb-8 lg:mb-12 text-blue-400">"Click on a text to view full detail"</h3>
       <div className="overflow-hidden mt-4 md:mt-8 relative">
         <div className="flex animate-slide whitespace-nowrap">
           {error ? (
