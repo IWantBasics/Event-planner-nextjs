@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Loading from '../app/Components/Loading';
+import { RiMapPinUserLine } from "react-icons/ri";
+
 interface EventDetailsProps {
   id: number;
   name: string;
@@ -27,7 +29,6 @@ const EventDetailsPage: React.FC = () => {
   const fetchEventDetails = async () => {
     try {
       const response = await axios.get(`/api/events/${id}`);
-      console.log('Fetched event details:', response.data); // Debugging log
       setEvent(response.data);
     } catch (error) {
       console.error('Error fetching event details:', error);
@@ -36,27 +37,42 @@ const EventDetailsPage: React.FC = () => {
     }
   };
 
-  if (loading) return <Loading/>;
+  if (loading) return <Loading />;
   if (!event) return <div>No event found</div>;
 
   return (
-    <div className="container mx-auto mt-10 p-5">
+    <div className="container mx-auto mt-10 p-4 sm:p-6 lg:p-8">
       <button
         onClick={() => router.back()}
-        className="bg-red-500 text-white py-2 px-4 rounded mb-4"
+        className="bg-red-500 text-white py-2 px-4 rounded mb-6"
       >
         Back
       </button>
-      <div className="bg-white rounded-xl shadow-md p-6 mb-4">
-        <h1 className="text-3xl font-bold mb-4">{event.name}</h1>
-        <p className="text-lg mb-4">Created by: {event.created_by}</p>
-        <p className="text-lg mb-4">Location: {event.location}</p>
-        <p className="text-lg mb-4">Date: {new Date(event.date).toLocaleDateString()}</p>
-        <p className="text-lg mb-4">Description: {event.description}</p>
-        <h2 className="text-2xl font-semibold mb-4">Attendees</h2>
-        <ul>
+      <div className="bg-white rounded-xl shadow-md p-6 md:p-8 lg:p-10 mb-4">
+        <div className="relative h-48 bg-blue-200 flex items-center justify-center rounded-xl">
+          <div className="absolute top-2 left-2 bg-blue-500 text-white p-2 rounded-full text-sm flex items-center max-w-[40%]" title={event.created_by}>
+            <span className="truncate">Created by: {event.created_by}</span>
+          </div>
+          <div className="absolute top-2 right-2 bg-blue-500 text-white p-2 rounded-full text-sm flex items-center max-w-[40%]" title={event.location}>
+            <RiMapPinUserLine className="text-xl flex-shrink-0 mr-1" />
+            <span className="truncate">{event.location}</span>
+          </div>
+        </div>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 text-center whitespace-normal break-words leading-tight">
+  Event: {event.name}
+</h1>
+        <div className="text-left md:text-center lg:text-left">
+          <p className="text-base sm:text-lg lg:text-xl mb-4">
+            Date: <span className="font-medium">{new Date(event.date).toLocaleDateString()}</span>
+          </p>
+          <p className="text-base sm:text-lg lg:text-xl mb-6 break-words">
+            Description: {event.description}
+          </p>
+        </div>
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-6">Attendees</h2>
+        <ul className="list-disc list-inside">
           {event.attendees.map((attendee) => (
-            <li key={attendee.id} className="mb-2">
+            <li key={attendee.id} className="text-base sm:text-lg lg:text-xl mb-2 break-words">
               {attendee.name}
             </li>
           ))}

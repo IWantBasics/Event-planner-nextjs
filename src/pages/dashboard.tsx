@@ -91,37 +91,35 @@ const Dashboard: React.FC = () => {
   };
 
   const handleJoinEvent = async (id: number) => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error('No token found');
-    const response = await axios.post(`http://localhost:3000/api/events/join/${id}`, {}, {
-      headers: { 'Authorization': `Bearer ${token}` },
-      withCredentials: true,
-    });
-    toast.success("Successfully joined the event!");
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found');
+      const response = await axios.post(`http://localhost:3000/api/events/join/${id}`, {}, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        withCredentials: true,
+      });
+      toast.success("Successfully joined the event!");
 
-    // Update the local state to reflect the new attendee count without re-sorting the list
-    setOtherEvents(prevEvents =>
-      prevEvents.map(event =>
-        event.id === id 
-          ? { ...event, attendee_count: (Number(event.attendee_count) || 0) + 1 } 
-          : event
-      )
-    );
+      setOtherEvents(prevEvents =>
+        prevEvents.map(event =>
+          event.id === id 
+            ? { ...event, attendee_count: (Number(event.attendee_count) || 0) + 1 } 
+            : event
+        )
+      );
 
-  } catch (error) {
-    console.error('Error joining event:', error);
-    if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data?.message || 'An unknown error occurred';
-      toast.error(`Failed to join event: ${errorMessage}`);
-    } else {
-      toast.error("Failed to join event. Please try again later.");
+    } catch (error) {
+      console.error('Error joining event:', error);
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message || 'An unknown error occurred';
+        toast.error(`Failed to join event: ${errorMessage}`);
+      } else {
+        toast.error("Failed to join event. Please try again later.");
+      }
     }
-  }
-};
+  };
 
-
-  if (loading) return <Loading/>;
+  if (loading) return <Loading />;
 
   return (
     <>
@@ -138,15 +136,15 @@ const Dashboard: React.FC = () => {
           className="bg-blue-500 text-white rounded-full py-3 px-6 font-medium mx-auto flex items-center space-x-2 animate-slidein hover:bg-blue-600 transition duration-300 mb-12"
         >
           <span className="text-xl">Create New Event</span>
-          <ImEllo className="text-xl"/>
+          <ImEllo className="text-xl" />
         </button>
 
         <div className="mb-12">
           <h2 className="text-3xl font-bold mb-8 text-blue-400">Upcoming Events</h2>
           <div className="overflow-x-auto">
-            <div className="flex space-x-4" style={{ whiteSpace: 'nowrap' }}>
+            <div className="flex space-x-4 whitespace-nowrap">
               {otherEvents.map((event, index) => (
-                <div key={index} className="inline-block">
+                <div key={index} className="inline-block" style={{ flexShrink: 0, width: '300px' }}>
                   <EventList 
                     events={[event]} 
                     onDelete={handleDeleteEvent} 
@@ -163,9 +161,9 @@ const Dashboard: React.FC = () => {
         <div className="mb-12">
           <h2 className="text-3xl font-bold mb-8 text-green-400">My Events</h2>
           <div className="overflow-x-auto">
-            <div className="flex space-x-4" style={{ whiteSpace: 'nowrap' }}>
+            <div className="flex space-x-4 whitespace-nowrap">
               {myEvents.map((event, index) => (
-                <div key={index} className="inline-block">
+                <div key={index} className="inline-block" style={{ flexShrink: 0, width: '300px' }}>
                   <EventList 
                     events={[event]} 
                     onDelete={handleDeleteEvent} 

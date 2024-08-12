@@ -129,3 +129,8 @@
   transition: transform 0.3s ease-in-out;
   margin-top: 10px; 
 }
+
+.custom-space-x {
+  display: flex;
+  gap: 7rem; 
+}

@@ -21,7 +21,7 @@ const EditEvent: React.FC = () => {
         const response = await axios.get(`http://localhost:3000/api/events/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log('Fetched event for editing:', response.data); // Debugging log
+        console.log('Fetched event for editing:', response.data);
         setEventData(response.data);
       } catch (error) {
         console.error('Error fetching event:', error);

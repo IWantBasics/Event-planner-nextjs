@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { RiMapPinUserLine } from "react-icons/ri";
 import { ImEllo } from "react-icons/im";
 import axios from 'axios';
 
@@ -28,19 +27,26 @@ const DashboardNavbar: React.FC = () => {
   };
 
   return (
-    <nav className="px-60 flex items-center justify-between">
-      <Link href="/dashboard">
-        <img src="/logopin.png" className="h-20 w-50 cursor-pointer" alt="EventConnect logo" title="Return to Dashboard"/>
-      </Link>
-      <ul className="flex justify-space space-x-14 pr-6">
-        <li 
-          onClick={handleLogout}
-          className="cursor-pointer font-medium text-white border border-red-500 px-5 py-2 bg-red-500 rounded-full flex items-center space-x-2 select-none"
-        >
-          <span>Logout</span>
-          <ImEllo className="text-2xl" />
-        </li>
-      </ul>
+    <nav className="w-full px-4 sm:px-8 md:px-16 flex items-center justify-center">
+      <div className="flex w-full max-w-5xl justify-between items-center">
+        <Link href="/dashboard">
+          <img 
+            src="/logopin.png" 
+            className="h-12 sm:h-16 md:h-20 cursor-pointer" 
+            alt="EventConnect logo" 
+            title="Return to Dashboard"
+          />
+        </Link>
+        <ul className="flex items-center space-x-4 sm:space-x-10 md:space-x-20">
+          <li 
+            onClick={handleLogout}
+            className="cursor-pointer font-medium text-white border border-red-500 px-3 py-2 sm:px-4 md:px-5 bg-red-500 rounded-full flex items-center space-x-2 select-none"
+          >
+            <span>Logout</span>
+            <ImEllo className="text-xl sm:text-2xl" />
+          </li>
+        </ul>
+      </div>
     </nav>
   );
 };

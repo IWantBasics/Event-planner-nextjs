@@ -1,14 +1,12 @@
 import Cors from 'cors';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-// Define the type for the middleware function
 type MiddlewareFunction = (
   req: NextApiRequest,
   res: NextApiResponse,
   next: (result?: any) => void
 ) => void;
 
-// Initialize the CORS middleware with detailed logging
 export const cors = Cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   origin: (origin, callback) => {
@@ -34,7 +32,6 @@ export const cors = Cors({
   credentials: true,
 });
 
-// Helper function to run middleware with detailed logging
 export function runMiddleware(
   req: NextApiRequest,
   res: NextApiResponse,
