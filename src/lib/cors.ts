@@ -14,6 +14,7 @@ export const cors = Cors({
     const allowedOrigins = [
       'https://event-planner-nextjs-xi.vercel.app',
       'https://event-planner-nextjs-xi.vercel.app/',
+      'localhost:3000'
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
