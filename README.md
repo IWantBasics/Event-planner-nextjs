@@ -1,4 +1,4 @@
-### https://github.com/user-attachments/assets/98ea4a84-f0e9-4daf-ad4f-a0ca5a23bae8)Bootstrapped with React and Next.js for the frontend, Node.js and a relational database on the backend. Try it out live on Vercel: https://event-planner-nextjs-xi.vercel.app/
+### Made with React and Next.js for the frontend, Node.js and a relational database on the backend. Try it out live on Vercel: https://event-planner-nextjs-xi.vercel.app/
 ![GIF Recording 2024-08-12 at 4 36 57 a m](https://github.com/user-attachments/assets/b07b09db-0166-4c94-8118-0b4bfe0ef048)
 # EventConnect
 ![output-onlinepngtools](https://github.com/user-attachments/assets/b2808e42-850b-4716-8432-24cbf31ea5be)
